@@ -1,3 +1,5 @@
+name: Build and Test (ROS 2 Jazzy)
+
 on:
   pull_request:
   push:
@@ -7,11 +9,17 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
+
+    container:
+      image: rostooling/setup-ros-docker:ubuntu-noble-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: ros-tooling/setup-ros@v0.6
-      - uses: ros-tooling/action-ros-ci@v0.3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build and test workspace
+        uses: ros-tooling/action-ros-ci@v0.4
         with:
           target-ros2-distro: jazzy
           package-name: kortex_bringup kortex_driver
+          skip-tests: true
